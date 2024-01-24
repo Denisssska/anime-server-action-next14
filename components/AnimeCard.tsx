@@ -1,4 +1,6 @@
+import { headers } from 'next/headers'
 import Image from 'next/image'
+import Link from 'next/link'
 import { MotionDiv } from './MotionDiv'
 export interface AnimeProp {
 	id: string
@@ -25,6 +27,13 @@ const variants = {
 	},
 }
 function AnimeCard({ anime, index }: Prop) {
+	const headersList = headers()
+	const pathname = headersList.get('x-pathname')
+
+	const url = new URL(pathname ? pathname : '', 'http://localhost:3000')
+	url.searchParams.set('modal', 'true')
+	url.searchParams.set('id', anime.id.toString())
+
 	return (
 		<MotionDiv
 			variants={variants}
@@ -66,9 +75,18 @@ function AnimeCard({ anime, index }: Prop) {
 							{anime.episodes || anime.episodes_aired}
 						</p>
 					</div>
-					<div className='flex flex-row gap-2 items-center'>
+					<div className='flex flex-row  gap-2 items-center'>
 						<Image src='./star.svg' alt='star' width={18} height={18} className='object-contain' />
 						<p className='text-base font-bold text-[#FFAD49]'>{anime.score}</p>
+					</div>
+					<div className='flex flex-row  gap-2 items-center'>
+						<Link
+							className='justify-center flex text-center w-full border rounded px-3 py-1 text-white hover:bg-white transition-colors duration-300 hover:text-zinc-900 border-zinc-300 hover:border-zinc-900'
+							href={url.toString()}
+							scroll={false}
+						>
+							View More
+						</Link>
 					</div>
 				</div>
 			</div>
